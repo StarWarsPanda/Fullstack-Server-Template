@@ -1,0 +1,9 @@
+bin/
+obj/
+.cache/
+
+compile_commands.json
+fullstackserver.make
+Makefile
+.ninja_deps
+.ninja_log
