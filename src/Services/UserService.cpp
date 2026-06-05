@@ -1,7 +1,7 @@
 #include "Services/UserService.h"
 #include <chrono>
 
-nlohmann::json UserService::RegisterUser(User& user)
+nlohmann::json UserService::RegisterUser(User& user) const
 {
 	auto userCollision = m_repository.GetUser(user.id, user.name, user.email);
 
@@ -20,7 +20,7 @@ nlohmann::json UserService::RegisterUser(User& user)
 
 	if(result.has_value())
 	{
-		return result.value();
+		return nlohmann::json{{ "id", result.value() }};
 	}
 
 	return nlohmann::json{
@@ -63,17 +63,17 @@ nlohmann::json UserService::LoginUser(const std::string& username, const std::st
 	return nlohmann::json::object();
 }
 
-bool UserService::RemoveUser(int id)
+bool UserService::RemoveUser(int id) const
 {
 	return false;
 }
 
-bool UserService::UpdateUser(const User& user)
+bool UserService::UpdateUser(const User& user) const
 {
 	return false;
 }
 
-bool UserService::ChangeUserPassword(const User& user, const std::string& newPassword)
+bool UserService::ChangeUserPassword(const User& user, const std::string& newPassword) const
 {
 	return false;
 }
