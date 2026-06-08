@@ -34,13 +34,13 @@ std::optional<User> UserRepo::GetUser(int id, const std::string& name, const std
 
 	if(!name.empty())
 	{
-		queryOss << "AND name = " << paramsIndex++ << std::endl;
+		queryOss << "AND name = $" << paramsIndex++ << std::endl;
 		params.append(name);
 	}
 
 	if(!email.empty())
 	{
-		queryOss << "AND email = " << paramsIndex++ << std::endl;
+		queryOss << "AND email = $" << paramsIndex++ << std::endl;
 		params.append(email);
 	}
 
