@@ -1,0 +1,39 @@
+name: React to S3
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "front/**"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Libraries
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        working-directory: front
+        run: npm ci
+
+      - name: Build React App
+        working-directory: front
+        run: npm run build
+
+      - name: Setup AWS S3 Credentials
+        run: |
+          mkdir -p ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync front/dist s3://student-matthew-gaska-s3-fullstackserver --delete
