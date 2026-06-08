@@ -3,6 +3,18 @@ import { loginUser, registerUser, type UserProfile } from './api/auth'
 import { API_CONFIG } from './config/api'
 import './App.css'
 
+function Header() {
+  return (
+    <header className="bg-gradient-to-r from-midnight-900 via-midnight-800 to-midnight-700 shadow-lg">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <h1 className="text-white text-3xl font-bold tracking-tight">
+          FullStack Template
+        </h1>
+      </div>
+    </header>
+  )
+}
+
 type Page = 'home' | 'auth' | 'settings'
 type AuthMode = 'login' | 'register'
 
@@ -306,6 +318,7 @@ function App() {
 
   return (
     <>
+      <Header />
       <nav>
         <button type="button" onClick={goHome}>
           Home
