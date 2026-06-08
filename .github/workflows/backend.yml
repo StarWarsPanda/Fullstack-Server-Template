@@ -9,7 +9,7 @@ on:
       - 'include/**'
       - 'main.cpp'
       - 'Dockerfile'
-      - '.github/workflows/backend.yml
+      - '.github/workflows/backend.yml'
 
 jobs:
   build:
