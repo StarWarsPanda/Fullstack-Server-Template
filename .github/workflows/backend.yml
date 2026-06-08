@@ -30,10 +30,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
       - name: Send Docker Image to EC2 Instance
         run: |
-          scp -o StrictHostKeyChecking=no fullstackserver.tar ${{ secrets.EC2_USER }}@#{{ secrets.EC2_HOST }}:/tmp/fullstackserver.tar
+          scp -o StrictHostKeyChecking=no fullstackserver.tar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/fullstackserver.tar
       - name: Deploy Image
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@#{{ secrets.EC2_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
 
           docker load -i /tmp/fullstackserver.tar
 
