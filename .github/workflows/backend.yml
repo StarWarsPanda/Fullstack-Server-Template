@@ -1,0 +1,43 @@
+name: Docker To EC2
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - 'main.cpp'
+      - 'Dockerfile'
+      - '.github/workflows/backend.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: |
+          docker build -t fullstackserver:${{ github.sha }} .
+      - name: Export Docker Image
+        run: |
+          docker save fullstackserver:${{ github.sha }} -o fullstackserver.tar
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      - name: Send Docker Image to EC2 Instance
+        run: |
+          scp -o StrictHostKeyChecking=no fullstackserver.tar ${{ secrets.EC2_USER }}@#{{ secrets.EC2_HOST }}:/tmp/fullstackserver.tar
+      - name: Deploy Image
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@#{{ secrets.EC2_HOST }} << EOF
+
+          docker load -i /tmp/fullstackserver.tar
+
+          docker stop fullstackserver || true
+          docker rm fullstackserver || true
+
+          docker run -d -p 127.0.0.1:8080:8080 --add-host=host.docker.internal:host-gateway --restart unless-stopped --name fullstackserver fullstackserver:${{ github.sha }}
